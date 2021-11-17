@@ -3,19 +3,18 @@ package lesson3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static io.restassured.RestAssured.given;
 
 public class ImageDeleteTest extends BaseTest{
 
     String uploadedImageId;
+    private static String PATH_TO_IMAGE = "src/test/resources/carbon.png";
 
     @BeforeEach
-
     void setUp() {
-        uploadedImageId = given(requestSpecificationWithAuth)
-                .expect()
-                .statusCode(200)
-                .when()
+        uploadedImageId = given(requestSpecificationWithAuthAndMultipartImage, responseSpecificationPositive)
                 .post("https://api.imgur.com/3/upload")
                 .prettyPeek()
                 .then()

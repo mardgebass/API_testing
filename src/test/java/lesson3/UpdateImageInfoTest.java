@@ -1,8 +1,11 @@
 package lesson3;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 
@@ -10,14 +13,15 @@ import static io.restassured.RestAssured.given;
 
 public class UpdateImageInfoTest extends BaseTest{
 
+    private static final String PATH_TO_IMAGE = "src/test/resources/carbon.png";
     String uploadedImageId;
 
-    @BeforeEach
 
+    @BeforeEach
     void setUp() {
         uploadedImageId = given()
                 .headers("Authorization", token)
-                .multiPart("image", new File("src/test/resources/carbon.png"))
+                .multiPart("image", new File(PATH_TO_IMAGE))
                 .param("title", "title")
                 .expect()
                 .statusCode(200)
@@ -32,7 +36,6 @@ public class UpdateImageInfoTest extends BaseTest{
     }
 
     @Test
-    @Order(1)
     void updateImageInfoTest() {
         given()
                 .headers("Authorization", token)
@@ -42,20 +45,32 @@ public class UpdateImageInfoTest extends BaseTest{
                 .prettyPeek()
                 .then()
                 .statusCode(200);
-    }
 
-    @Test
-    @Order(2)
-    void getImageInfoTest() {
-        given()
+        String title = given()
                 .headers("Authorization", token)
                 .when()
                 .get("https://api.imgur.com/3/image/{deleteHash}", uploadedImageId)
                 .prettyPeek()
                 .then()
+                .extract()
+                .response()
+                .jsonPath()
+                .getString("data.title");
+
+        assertThat("title", title, equalTo("new_title"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        given(requestSpecificationWithAuth)
+                .when()
+                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", uploadedImageId)
+                .prettyPeek()
+                .then()
                 .statusCode(200);
     }
 
-}
+    }
+
 
 

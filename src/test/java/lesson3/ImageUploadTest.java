@@ -3,19 +3,20 @@ package lesson3;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
 
 public class ImageUploadTest extends BaseTest {
 
-    String imageHash;
     String uploadedImageId;
+
+
 
 
     @Test
     void upload1FileImageTest() {
-        uploadedImageId = given(requestSpecificationWithAuthAndMultipart, responseSpecificationPositive)
+        uploadedImageId = given(requestSpecificationWithAuthAndMultipartImage, responseSpecificationPositive)
                 .post("https://api.imgur.com/3/upload")
                 .prettyPeek()
                 .then()
@@ -27,7 +28,7 @@ public class ImageUploadTest extends BaseTest {
 
     @Test
     void uploadFileImageTest() {
-        imageHash = given(requestSpecificationWithAuthAndMultipart64, responseSpecificationPositive)
+        uploadedImageId = given(requestSpecificationWithAuthAndMultipartImage, responseSpecificationPositive)
                 .post("https://api.imgur.com/3/upload")
                 .prettyPeek()
                 .then()

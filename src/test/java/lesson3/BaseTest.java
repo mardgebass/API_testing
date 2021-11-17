@@ -1,22 +1,28 @@
 package lesson3;
 
-import io.qameta.allure.restassured.AllureRestAssured;
-import io.restassured.RestAssured;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.http.ContentType;
 import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
+
+
+import static org.hamcrest.CoreMatchers.is;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.BeforeAll;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.io.*;
-import java.util.Base64;
 import java.util.Properties;
 
 public abstract class BaseTest {
@@ -29,14 +35,14 @@ public abstract class BaseTest {
 
     static String encodedFile;
 
-    static RequestSpecification requestSpecificationWithAuthAndMultipart;
+    static RequestSpecification requestSpecificationWithAuthAndMultipartImage;
     static RequestSpecification requestSpecificationWithAuthAndMultipart64;
 
     static RequestSpecification requestSpecificationWithAuth;
     static ResponseSpecification responseSpecificationPositive;
 
-    private static MultiPartSpecification multiPartSpecification;
-    private static MultiPartSpecification multiPartSpecWithFile;
+    static MultiPartSpecification multiPartSpecification;
+    static MultiPartSpecification multiPartSpecWithFile;
 
 
     @BeforeAll
@@ -59,7 +65,6 @@ public abstract class BaseTest {
             .build();
 
 
-
     byte [] byteArray = getFileContent(PATH_TO_IMAGE);
     encodedFile = Base64.getEncoder().encodeToString(byteArray);
 
@@ -73,13 +78,12 @@ public abstract class BaseTest {
             .build();
 
 
-    requestSpecificationWithAuthAndMultipart = new RequestSpecBuilder()
-            .addHeader("Authorization", token)
-            .addMultiPart(multiPartSpecWithFile)
-            .addFormParam("title", "title")
-            .addFormParam("type", "png")
-
-            .build();
+        requestSpecificationWithAuthAndMultipartImage = new RequestSpecBuilder()
+                .addHeader("Authorization", token)
+                .addFormParam("title", "carbon")
+                .addFormParam("type", "png")
+                .addMultiPart(multiPartSpecWithFile)
+                .build();
 
     requestSpecificationWithAuthAndMultipart64 = new RequestSpecBuilder()
             .addHeader("Authorization", token)
