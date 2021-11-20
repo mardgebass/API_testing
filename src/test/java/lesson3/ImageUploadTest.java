@@ -1,5 +1,6 @@
 package lesson3;
 
+import dto.ImageResponce;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,9 +22,9 @@ public class ImageUploadTest extends BaseTest {
                 .prettyPeek()
                 .then()
                 .extract()
-                .response()
-                .jsonPath()
-                .getString("data.deletehash");
+                .body()
+                .as(ImageResponce.class)
+                .getData().getDeletehash();
     }
 
     @Test
@@ -33,9 +34,9 @@ public class ImageUploadTest extends BaseTest {
                 .prettyPeek()
                 .then()
                 .extract()
-                .response()
-                .jsonPath()
-                .getString("data.deletehash");
+                .body()
+                .as(ImageResponce.class)
+                .getData().getDeletehash();
 
     }
 

@@ -1,5 +1,6 @@
 package lesson3;
 
+import dto.ImageResponce;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +20,9 @@ public class ImageDeleteTest extends BaseTest{
                 .prettyPeek()
                 .then()
                 .extract()
-                .response()
-                .jsonPath()
-                .getString("data.deletehash");
+                .body()
+                .as(ImageResponce.class)
+                .getData().getDeletehash();
     }
 
         @Test
