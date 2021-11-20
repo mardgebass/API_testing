@@ -1,5 +1,6 @@
 package lesson3;
 
+import dto.ImageResponce;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +23,9 @@ public class GetImageTest extends BaseTest{
                 .prettyPeek()
                 .then()
                 .extract()
-                .response()
-                .jsonPath()
-                .getString("data.id");
+                .body()
+                .as(ImageResponce.class)
+                .getData().getId();
     }
 
     @Test
