@@ -49,6 +49,8 @@ public class FavoriteTest extends BaseTest{
 
     }
 
+
+    // не работает с импользованием responseSpecificationPositiveFavorite
     @AfterEach
     void tearDown() {
         given(requestSpecificationWithAuth,responseSpecificationPositive)

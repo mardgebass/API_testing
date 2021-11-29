@@ -34,6 +34,8 @@ public class GetImageTest extends BaseTest{
                 .prettyPeek();
     }
 
+
+    // не работает с импользованием responseSpecificationPositive
     @AfterEach
     void tearDown() {
         given(requestSpecificationWithAuth,responseSpecificationPositive)
