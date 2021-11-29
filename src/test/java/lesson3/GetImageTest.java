@@ -29,11 +29,8 @@ public class GetImageTest extends BaseTest{
 
     @Test
     void getImageInfoTest() {
-        given(requestSpecificationWithAuth)
-                .expect()
-                .statusCode(200)
-                .when()
-                .get("https://api.imgur.com/3/image/{deleteHash}", uploadedImageId)
+        given(requestSpecificationWithAuth, responseSpecificationPositive)
+                .get("https://api.imgur.com/3/image/{imageHash}", uploadedImageId)
                 .prettyPeek();
     }
 
