@@ -1,10 +1,8 @@
 package lesson3;
 
-import dto.ImageResponce;
+import dto.ImageResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
@@ -21,14 +19,14 @@ public class ImageDeleteTest extends BaseTest{
                 .then()
                 .extract()
                 .body()
-                .as(ImageResponce.class)
+                .as(ImageResponse.class)
                 .getData().getDeletehash();
     }
 
-        @Test
-        void deleteTest() {
-            given(requestSpecificationWithAuth, responseSpecificationPositive)
-                    .delete("https://api.imgur.com/3/image/{imageHash}", uploadedImageId);
+    @Test
+    void deleteTest() {
+        given(requestSpecificationWithAuth, responseSpecificationPositive)
+                .delete("https://api.imgur.com/3/image/{imageHash}", uploadedImageId);
 
         }
 

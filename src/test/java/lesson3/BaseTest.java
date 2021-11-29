@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
-
 import static org.hamcrest.CoreMatchers.is;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -20,7 +19,6 @@ import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.BeforeAll;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 
 import java.io.*;
 import java.util.Properties;
@@ -41,12 +39,13 @@ public abstract class BaseTest {
     static RequestSpecification requestSpecificationWithAuth;
     static ResponseSpecification responseSpecificationPositive;
 
-    static MultiPartSpecification multiPartSpecification;
+    static MultiPartSpecification base64MultiPartSpec;
     static MultiPartSpecification multiPartSpecWithFile;
 
 
     @BeforeAll
     static void beforeAll(){
+
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.filters(new AllureRestAssured());
         getProperties();
@@ -65,32 +64,43 @@ public abstract class BaseTest {
             .build();
 
 
+
     byte [] byteArray = getFileContent(PATH_TO_IMAGE);
     encodedFile = Base64.getEncoder().encodeToString(byteArray);
+    base64MultiPartSpec = new MultiPartSpecBuilder(encodedFile)
+                .controlName("image")
+                .build();
+
+    requestSpecificationWithAuthAndMultipart64 = new RequestSpecBuilder()
+                .addHeader("Authorization", token)
+                .addMultiPart(base64MultiPartSpec)
+                .build();
 
 
     multiPartSpecWithFile = new MultiPartSpecBuilder(new File("src/test/resources/carbon.png"))
-            .controlName("carbon")
-            .build();
-
-    multiPartSpecification = new MultiPartSpecBuilder(encodedFile)
-            .controlName("carbon")
+            .controlName("image")
             .build();
 
 
-        requestSpecificationWithAuthAndMultipartImage = new RequestSpecBuilder()
+    requestSpecificationWithAuthAndMultipartImage = new RequestSpecBuilder()
                 .addHeader("Authorization", token)
                 .addFormParam("title", "carbon")
                 .addFormParam("type", "png")
                 .addMultiPart(multiPartSpecWithFile)
                 .build();
 
-    requestSpecificationWithAuthAndMultipart64 = new RequestSpecBuilder()
-            .addHeader("Authorization", token)
-            .addMultiPart(multiPartSpecification)
-            .build();
+
 
 }
+    public static byte[] getFileContent(String path){
+        byte [] byteArray = new byte[0];
+        try {
+            byteArray = FileUtils.readFileToByteArray(new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteArray;
+    }
 
     public static void getProperties() {
         try (InputStream output = new FileInputStream("src/test/resources/properties.properties")) {
@@ -100,16 +110,6 @@ public abstract class BaseTest {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-    }
-
-    public static byte[] getFileContent(String path){
-        byte [] byteArray = new byte[0];
-        try {
-            byteArray = FileUtils.readFileToByteArray(new File(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return byteArray;
     }
 
 

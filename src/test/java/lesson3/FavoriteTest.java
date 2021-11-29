@@ -1,27 +1,37 @@
 package lesson3;
 
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
+import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 public class FavoriteTest extends BaseTest{
 
     String uploadedImageId;
     String deleteHash;
-    private Response response;
+    Response response;
+    static ResponseSpecification responseSpecificationPositiveFavorite;
+
 
     @BeforeEach
     void setUp() {
-        response = given(requestSpecificationWithAuthAndMultipartImage)
-                .expect()
-                .statusCode(200)
-                .when()
+
+        responseSpecificationPositiveFavorite = new ResponseSpecBuilder()
+                .expectBody("status", equalTo(200))
+                .expectBody("data", is("favorited"))
+                .expectBody("success", is(true))
+                .expectContentType(ContentType.JSON)
+                .expectStatusCode(200)
+                .build();
+
+        response = given(requestSpecificationWithAuthAndMultipartImage, responseSpecificationPositive)
                 .post("https://api.imgur.com/3/upload")
                 .prettyPeek()
                 .then()
@@ -32,21 +42,17 @@ public class FavoriteTest extends BaseTest{
         deleteHash = response.jsonPath().getString("data.deletehash");
     }
 
-
     @Test
     void favouriteTest(){
-        given(requestSpecificationWithAuth,responseSpecificationPositive)
+        given(requestSpecificationWithAuth, responseSpecificationPositiveFavorite)
                 .post("https://api.imgur.com/3/image/{imageHash}/favorite", uploadedImageId);
+
     }
 
     @AfterEach
     void tearDown() {
-        given(requestSpecificationWithAuth)
-                .when()
-                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", uploadedImageId)
-                .prettyPeek()
-                .then()
-                .statusCode(200);
+        given(requestSpecificationWithAuth,responseSpecificationPositive)
+                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", deleteHash);
     }
 
     }

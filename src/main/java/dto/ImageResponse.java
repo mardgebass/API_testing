@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "status"
 })
 @Generated("jsonschema2pojo")
-public class ImageResponce implements Serializable
+public class ImageResponse implements Serializable
 {
 
     @JsonProperty("data")
@@ -35,7 +35,7 @@ public class ImageResponce implements Serializable
      * No args constructor for use in serialization
      * 
      */
-    public ImageResponce() {
+    public ImageResponse() {
     }
 
     /**
@@ -44,7 +44,7 @@ public class ImageResponce implements Serializable
      * @param success
      * @param status
      */
-    public ImageResponce(Data data, Boolean success, Integer status) {
+    public ImageResponse(Data data, Boolean success, Integer status) {
         super();
         this.data = data;
         this.success = success;
@@ -61,7 +61,7 @@ public class ImageResponce implements Serializable
         this.data = data;
     }
 
-    public ImageResponce withData(Data data) {
+    public ImageResponse withData(Data data) {
         this.data = data;
         return this;
     }
@@ -76,7 +76,7 @@ public class ImageResponce implements Serializable
         this.success = success;
     }
 
-    public ImageResponce withSuccess(Boolean success) {
+    public ImageResponse withSuccess(Boolean success) {
         this.success = success;
         return this;
     }
@@ -91,7 +91,7 @@ public class ImageResponce implements Serializable
         this.status = status;
     }
 
-    public ImageResponce withStatus(Integer status) {
+    public ImageResponse withStatus(Integer status) {
         this.status = status;
         return this;
     }
@@ -106,7 +106,7 @@ public class ImageResponce implements Serializable
         this.additionalProperties.put(name, value);
     }
 
-    public ImageResponce withAdditionalProperty(String name, Object value) {
+    public ImageResponse withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }

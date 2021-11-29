@@ -1,10 +1,8 @@
 package lesson3;
 
-import dto.ImageResponce;
+import dto.ImageResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
@@ -12,18 +10,16 @@ public class ImageUploadTest extends BaseTest {
 
     String uploadedImageId;
 
-
-
-
     @Test
-    void upload1FileImageTest() {
-        uploadedImageId = given(requestSpecificationWithAuthAndMultipartImage, responseSpecificationPositive)
+// не получается с загрузкой формата base64
+    void uploadBaseImageTest() {
+        uploadedImageId = given(requestSpecificationWithAuthAndMultipart64, responseSpecificationPositive)
                 .post("https://api.imgur.com/3/upload")
                 .prettyPeek()
                 .then()
                 .extract()
                 .body()
-                .as(ImageResponce.class)
+                .as(ImageResponse.class)
                 .getData().getDeletehash();
     }
 
@@ -35,7 +31,7 @@ public class ImageUploadTest extends BaseTest {
                 .then()
                 .extract()
                 .body()
-                .as(ImageResponce.class)
+                .as(ImageResponse.class)
                 .getData().getDeletehash();
 
     }
@@ -43,12 +39,8 @@ public class ImageUploadTest extends BaseTest {
 
     @AfterEach
     void tearDown() {
-        given(requestSpecificationWithAuth)
-                .when()
-                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", uploadedImageId)
-                .prettyPeek()
-                .then()
-                .statusCode(200);
+        given(requestSpecificationWithAuth, responseSpecificationPositive)
+                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", uploadedImageId);
     }
 
 
