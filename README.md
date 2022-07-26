@@ -1,1 +1,1 @@
-Тестирование API https://api.imgur.com/
+API https://api.imgur.com/
